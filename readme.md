@@ -4,7 +4,7 @@ DateTimeKit is a Swift library that provides simple, easy-to-use date, time and 
 DateTimeKit removes the dependence on `NSDate` and `NSCalendar` and provides a new set of objects in their place. 
 
 ## Instant
-An instant represents a moment on the datetime continuum. Under the covers, just like `NSDate`, it represents the number of milliseconds since the *reference date (1st Jan 2001)*.  It is totally independent of timezone.
+An instant represents a moment on the datetime continuum. Under the covers, just like `NSDate`, it represents the number of milliseconds since the *reference date (1st Jan 1970)*.  It is totally independent of timezone.
 
 ```
 let now = Instant()

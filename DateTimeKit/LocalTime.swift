@@ -108,7 +108,7 @@ public struct LocalTime {
 	- returns: A new `LocalTime` that represents the new time
 	*/
 	public func plus(duration: Duration) -> LocalTime {
-		let zonedDateTime = DateTime(2001, 1, 1, self.hour, self.minute, self.second, self.millisecond, Zone.utc())!
+		let zonedDateTime = DateTime(1970, 1, 1, self.hour, self.minute, self.second, self.millisecond, Zone.utc())!
 		let newDateTime = zonedDateTime + duration
 		return LocalTime(newDateTime.instant(), Zone.utc())
 	}
@@ -127,7 +127,7 @@ public struct LocalTime {
 	- returns: A new `LocalTime` that represents the new time
 	*/
 	public func minus(duration: Duration) -> LocalTime {
-		let zonedDateTime = DateTime(2001, 1, 1, self.hour, self.minute, self.second, self.millisecond, Zone.utc())!
+		let zonedDateTime = DateTime(1970, 1, 1, self.hour, self.minute, self.second, self.millisecond, Zone.utc())!
 		let newDateTime = zonedDateTime - duration
 		return LocalTime(newDateTime.instant(), Zone.utc())
 	}
