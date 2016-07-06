@@ -57,7 +57,7 @@ public struct Instant {
      - parameter timestamp: The `NSDate` object that represents the moment
      */
     public init(_ timestamp: NSDate) {
-        self.init(timestamp.timeIntervalSinceReferenceDate)
+        self.init(timestamp.timeIntervalSince1970)
     }
     
     /**
@@ -108,7 +108,7 @@ public struct Instant {
      Constucts an NSDate object that represents the same moment in time as this instant
      */
     public func asNSDate() -> NSDate {
-        return NSDate(timeIntervalSinceReferenceDate: self.secondsSinceReferenceDate)
+        return NSDate(timeIntervalSince1970: self.secondsSinceReferenceDate)
     }
     
     /**
