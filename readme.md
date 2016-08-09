@@ -34,7 +34,33 @@ println(sydneyTime)       // 2015-03-06 19:02:28.662 - Australia/Sydney (GMT+11)
 
 let parisTime = sydneyTime.inZone(parisZone)
 println(parisTime)        // 2015-03-06 09:02:28.662 - Europe/Paris (GMT+1) offset 3600
+
 ```
+
+## Weeks Methods
+Is import to get the first and last day of a specific `DateTime` for that this library has the following methods:
+```
+let zone = Zone()
+let customDate = DateTime(2016 , 05, 15, 02, 20, 0, 0, zone)!
+
+let firstDateOfTheWeekForAnSpecificDate = customDate.getFirstDayOfTheWeek()
+print(firstDateOfTheWeekForAnSpecificDate.description)       // 2016-05-15 00:00:00 - America/Costa_Rica (CST) offset -21600
+
+let lastDateOfTheWeekForAnSpecificDate = customDate.getLastDayOfTheWeek()
+print(lastDateOfTheWeekForAnSpecificDate.description)        // 2016-05-21 23:59:59.59 - America/Costa_Rica (CST) offset -21600
+
+```
+
+## Days Methods
+Is import to know what is the day number of the specific date for that this library has the following method
+```
+let zone = Zone()
+let customDate = DateTime(2016 , 05, 15, 02, 20, 0, 0, zone)!
+let dayOfTheWeek = customDate.getDayOfTheWeek()
+
+print(dayOfTheWeek)        // Sunday
+```
+
 
 ## Duration
 A duration is a explicit length of time that can be measured in seconds (or part thereof). For example, 2 hours can be represented as 7200 seconds.
