@@ -183,6 +183,13 @@ public struct DateTime {
     }
     
     /**
+     Returns a DateTime with the first date of the week in Miliseconds
+     */
+    public func getFirstDayOfTheWeekInMiliseconds() -> NSNumber{
+        return  NSNumber(longLong: Int64(getFirstDayOfTheWeek().instant().millisecondsSinceReferenceDate))
+    }
+    
+    /**
      Returns a DateTime with the Last date of the week
      */
     public func getLastDayOfTheWeek() -> DateTime{
@@ -196,9 +203,12 @@ public struct DateTime {
         return newDateTime;
     }
     
-    
-    
-    
+    /**
+     Returns a DateTime with the last date of the week in Miliseconds
+     */
+    public func getLastDayOfTheWeekInMiliseconds() -> NSNumber{
+        return  NSNumber(longLong: Int64(getLastDayOfTheWeek().instant().millisecondsSinceReferenceDate))
+    }
     
     
     /**
