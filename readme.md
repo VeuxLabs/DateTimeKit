@@ -57,8 +57,13 @@ Is import to know what is the day number of the specific date for that this libr
 let zone = Zone()
 let customDate = DateTime(2016 , 05, 15, 02, 20, 0, 0, zone)!
 let dayOfTheWeek = customDate.getDayOfTheWeek()
-
 print(dayOfTheWeek)        // Sunday
+
+let firstMillisecondOfDay = customDate.getFirstMillisecondOfDay()
+print(firstMillisecondOfDay.description)       // 1466732025000
+
+let lastMillisecondOfDay = customDate.getLastMillisecondOfDay()
+print(lastMillisecondOfDay.description)        // 1466322025000
 ```
 
 

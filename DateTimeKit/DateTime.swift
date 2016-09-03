@@ -153,8 +153,21 @@ public struct DateTime {
         return Instant(calendar.dateFromComponents(components)!)
     }
     
+    /**
+     Returns a DateTime with the first millisecond of that day
+     */
+    public func getFirstMillisecondOfDay() -> DateTime {
+        let newDateTime = DateTime(self.year , self.month, self.day, 0, 0, 0, 0, self.zone)
+        return newDateTime!
+    }
     
-    
+    /**
+     Returns a DateTime with the last millisecond of that day
+     */
+    public func getLastMillisecondOfDay() -> DateTime {
+        let newDateTime = DateTime(self.year , self.month, self.day, 23, 59, 59, 999, self.zone)
+        return newDateTime!
+    }
     
     /**
      Returns a DayOfWeek representing the specific day for example Sunday == 1, please see the enum in the footer part
