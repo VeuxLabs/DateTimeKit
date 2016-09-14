@@ -29,8 +29,8 @@ public struct LocalDate {
 	- parameter day: The day (must be between 1 and the number of days in the passed month)
 	- parameter error: An error that will be populated if the initialiser fails
 	*/
-	public init?(_ year: Int, _ month: Int, _ day: Int, _ error: DateTimeErrorPointer = nil) {
-		if let m = Month(rawValue: month) where day <= m.numberOfDays(year) {
+	public init?(_ year: Int, _ month: Int, _ day: Int, _ error: DateTimeErrorPointer? = nil) {
+		if let m = Month(rawValue: month) , day <= m.numberOfDays(year) {
 			self.year = year
 			self.month = month
 			self.day = day
@@ -52,12 +52,12 @@ public struct LocalDate {
 	- parameter locale: The locale that will be used when parsing
 	- parameter error: An error that will be populated if the initialiser fails
 	*/
-	public init?(input: String, format: String, zone: Zone = Zone.systemDefault(), locale: NSLocale = NSLocale.autoupdatingCurrentLocale(), _ error: DateTimeErrorPointer = nil) {
-		let dateFormatter = NSDateFormatter()
+	public init?(input: String, format: String, zone: Zone = Zone.systemDefault(), locale: Locale = Locale.autoupdatingCurrent, _ error: DateTimeErrorPointer? = nil) {
+		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = format
-		dateFormatter.timeZone = zone.timezone
+		dateFormatter.timeZone = zone.timezone as TimeZone!
 		dateFormatter.locale = locale
-		if let date = dateFormatter.dateFromString(input) {
+		if let date = dateFormatter.date(from: input) {
 			self.init(Instant(date), zone)
 		}
 		else {
@@ -107,7 +107,7 @@ public struct LocalDate {
 	- parameter duration: The duration to be added
 	- returns: A new `LocalDate` that represents the new date
 	*/
-	public func plus(duration: Duration) -> LocalDate {
+	public func plus(_ duration: Duration) -> LocalDate {
 		let zonedDateTime = DateTime(self.year, self.month, self.day, 0, 0, 0, 0, Zone.utc())!
 		let newDateTime = zonedDateTime + duration
 		return LocalDate(newDateTime.instant(), Zone.utc())
@@ -125,7 +125,7 @@ public struct LocalDate {
 	- parameter duration: The duration to be subtracted
 	- returns: A new `LocalDate` that represents the new date
 	*/
-	public func minus(duration: Duration) -> LocalDate {
+	public func minus(_ duration: Duration) -> LocalDate {
 		let zonedDateTime = DateTime(self.year, self.month, self.day, 0, 0, 0, 0, Zone.utc())!
 		let newDateTime = zonedDateTime - duration
 		return LocalDate(newDateTime.instant(), Zone.utc())
@@ -139,18 +139,18 @@ public struct LocalDate {
 	- parameter period: The period to be added
 	- returns: A new `LocalDate` that represents the new date
 	*/
-	public func plus(period: Period) -> LocalDate {
+	public func plus(_ period: Period) -> LocalDate {
 		// get current date
 		let zonedDateTime = DateTime(self.year, self.month, self.day, 0, 0, 0, 0, Zone.utc())!
 		let currentNSDate = zonedDateTime.instant().asNSDate()
 		
 		// now add the required values to current date
-		let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
-		let components = NSDateComponents()
+		let calendar = Calendar(identifier: Calendar.Identifier.gregorian)
+		var components = DateComponents()
 		components.year = period.years
 		components.month = period.months
 		components.day = period.days
-		let modifiedDate = calendar.dateByAddingComponents(components, toDate: currentNSDate, options: [])!
+		let modifiedDate = (calendar as NSCalendar).date(byAdding: components, to: currentNSDate as Date, options: [])!
 		
 		// convert back to local date
 		return LocalDate(Instant(modifiedDate), Zone.utc())
@@ -164,18 +164,18 @@ public struct LocalDate {
 	- parameter period: The period to be subtracted
 	- returns: A new `LocalDate` that represents the new date
 	*/
-	public func minus(period: Period) -> LocalDate {
+	public func minus(_ period: Period) -> LocalDate {
 		// get current date
 		let zonedDateTime = DateTime(self.year, self.month, self.day, 0, 0, 0, 0, Zone.utc())!
 		let currentNSDate = zonedDateTime.instant().asNSDate()
 		
 		// now add the required values to current date
-		let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
-		let components = NSDateComponents()
+		let calendar = Calendar(identifier: Calendar.Identifier.gregorian)
+		var components = DateComponents()
 		components.year = -period.years
 		components.month = -period.months
 		components.day = -period.days
-		let modifiedDate = calendar.dateByAddingComponents(components, toDate: currentNSDate, options: [])!
+		let modifiedDate = (calendar as NSCalendar).date(byAdding: components, to: currentNSDate as Date, options: [])!
 		
 		// convert back to local date
 		return LocalDate(Instant(modifiedDate), Zone.utc())

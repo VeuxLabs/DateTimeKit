@@ -56,7 +56,7 @@ public struct Instant {
      
      - parameter timestamp: The `NSDate` object that represents the moment
      */
-    public init(_ timestamp: NSDate) {
+    public init(_ timestamp: Date) {
         self.init(timestamp.timeIntervalSince1970)
     }
     
@@ -72,7 +72,7 @@ public struct Instant {
      - parameter other: The instant to be subtracted
      - returns: A duration representing the difference between the two instants
      */
-    public func minus(other: Instant) -> Duration {
+    public func minus(_ other: Instant) -> Duration {
         return Duration(self.secondsSinceReferenceDate - other.secondsSinceReferenceDate)
     }
     
@@ -86,7 +86,7 @@ public struct Instant {
      - parameter duration: The duration to be added
      - returns: A new instant that represents the new moment in the datetime continuum
      */
-    public func plus(duration: Duration) -> Instant {
+    public func plus(_ duration: Duration) -> Instant {
         return Instant(self.secondsSinceReferenceDate + duration.seconds)
     }
     
@@ -100,15 +100,15 @@ public struct Instant {
      - parameter duration: The duration to be subtracted
      - returns: A new instant that represents the new moment in the datetime continuum
      */
-    public func minus(duration: Duration) -> Instant {
+    public func minus(_ duration: Duration) -> Instant {
         return Instant(self.secondsSinceReferenceDate - duration.seconds)
     }
     
     /**
      Constucts an NSDate object that represents the same moment in time as this instant
      */
-    public func asNSDate() -> NSDate {
-        return NSDate(timeIntervalSince1970: self.secondsSinceReferenceDate)
+    public func asNSDate() -> Date {
+        return Date(timeIntervalSince1970: self.secondsSinceReferenceDate)
     }
     
     /**
@@ -117,7 +117,7 @@ public struct Instant {
      - parameter clock: The clock to ask for the current instant
      - returns: A `Instant` representing the current time
      */
-    public static func now(clock: Clock = SystemClock()) -> Instant {
+    public static func now(_ clock: Clock = SystemClock()) -> Instant {
         return Instant()
     }
 }

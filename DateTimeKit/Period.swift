@@ -40,7 +40,7 @@ public struct Period {
 	- parameter period: The period to be added
 	- returns: A new period that represents the addition of the two periods
 	*/
-	public func plus(period: Period) -> Period {
+	public func plus(_ period: Period) -> Period {
 		return Period(self.years + period.years, self.months + period.months, self.days + period.days)
 	}
 	
@@ -52,7 +52,7 @@ public struct Period {
 	- parameter period: The period to be subtracted
 	- returns: A new period that represents the subtraction of the two periods
 	*/
-	public func minus(period: Period) -> Period {
+	public func minus(_ period: Period) -> Period {
 		return Period(self.years - period.years, self.months - period.months, self.days - period.days)
 	}
 }
@@ -76,9 +76,9 @@ extension Period : CustomStringConvertible {
 			let noun = self.pluralise("day", self.days)
 			components.append("\(self.days) \(noun)")
 		}
-		return components.joinWithSeparator(", ")
+		return components.joined(separator: ", ")
 	}
-	func pluralise(base: String, _ i: Int) -> String {
+	func pluralise(_ base: String, _ i: Int) -> String {
 		return i == 1 || i == -1 ? base : base+"s"
 	}
 }

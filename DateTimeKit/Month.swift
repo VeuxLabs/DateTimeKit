@@ -13,7 +13,7 @@ import Foundation
 A simple enumeration representing a month in a year.
 */
 public enum Month : Int {
-	case January = 1, February, March, April, May, June, July, August, September, October, November, December
+	case january = 1, february, march, april, may, june, july, august, september, october, november, december
 	
 	/**
 	Returns the name of the day given a specific locale. For example, for the `January` enum value,
@@ -22,13 +22,13 @@ public enum Month : Int {
 	- parameter The: locale to use. Defaults to user's current locale.
 	- returns: The locale-specific representation of the month's name
 	*/
-	public func displayName(locale: NSLocale = NSLocale.autoupdatingCurrentLocale()) -> String {
-		let formatter = NSDateFormatter()
+	public func displayName(_ locale: Locale = Locale.autoupdatingCurrent) -> String {
+		let formatter = DateFormatter()
 		formatter.locale = locale
 		formatter.dateFormat = "MM"
-		let date = formatter.dateFromString("\(self.rawValue)")
+		let date = formatter.date(from: "\(self.rawValue)")
 		formatter.dateFormat = "MMMM"
-		return formatter.stringFromDate(date!)
+		return formatter.string(from: date!)
 	}
 	
 	/**
@@ -37,7 +37,7 @@ public enum Month : Int {
 	- parameter The: number of months to add. May be negative, in which case it will be subtracted
 	- returns: The new month
 	*/
-	public func plus(months: Int) -> Month {
+	public func plus(_ months: Int) -> Month {
 		// * Moving forward 3 months is the same as 15 months and 27 months, so we modulo 12
 		//   to get the smallest number of equivalent months
 		// * Moving backwards by 3 months is the same as going forward by 9 months, so we add
@@ -56,7 +56,7 @@ public enum Month : Int {
 	- parameter The: number of months to subtract. May be negative, in which case it will be added
 	- returns: The new month
 	*/
-	public func minus(months: Int) -> Month {
+	public func minus(_ months: Int) -> Month {
 		return plus(-(months % 12))
 	}
 	
@@ -64,11 +64,11 @@ public enum Month : Int {
 	Returns the number of days in a this month for a given year
 	- returns: The number of days in this month
 	*/
-	public func numberOfDays(year: Int) -> Int {
+	public func numberOfDays(_ year: Int) -> Int {
 		switch (self) {
-			case .February:
+			case .february:
 				return Year(year).isLeap() ? 29 : 28
-			case .April, .June, .September, .November:
+			case .april, .june, .september, .november:
 				return 30
 			default:
 				return 31
