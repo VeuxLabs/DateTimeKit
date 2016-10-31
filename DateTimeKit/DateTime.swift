@@ -169,6 +169,24 @@ public struct DateTime {
         return newDateTime!
     }
     
+    
+    /**
+     Returns a DateTime with the first millisecond of that month
+     */
+    public func getFirstMillisecondOfMonth() -> DateTime {
+        let newDateTime = DateTime(self.year , self.month, 1, 0, 0, 0, 0, self.zone)
+        return newDateTime!
+    }
+    
+    /**
+     Returns a DateTime with the last millisecond of that month
+     */
+    public func getLastMillisecondOfMonth() -> DateTime {
+        var newDateTime = DateTime(self.year , self.month + 1, 1, 0, 0, 0, 0, self.zone)
+        newDateTime = newDateTime!.minus(Duration(1))
+        return newDateTime!
+    }
+    
     /**
      Returns a DayOfWeek representing the specific day for example Sunday == 1, please see the enum in the footer part
      */
@@ -222,7 +240,6 @@ public struct DateTime {
     public func getLastDayOfTheWeekInMiliseconds() -> NSNumber{
         return  NSNumber(longLong: Int64(getLastDayOfTheWeek().instant().millisecondsSinceReferenceDate))
     }
-    
     
     /**
      Converts this zoned date/time to another date/time in a different zone.

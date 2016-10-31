@@ -66,6 +66,16 @@ let lastMillisecondOfDay = customDate.getLastMillisecondOfDay()
 print(lastMillisecondOfDay.description)        // 1466322025000
 ```
 
+## Months Methods
+Import to know what the first and last millisecond for the current month.
+```
+let firstMillisecondOfMonth = customDate.getFirstMillisecondOfMonth()
+
+print(firstMillisecondOfMonth.description)      // 1466732025000
+
+let lastMillisecondOfMonth = customDate.getLastMillisecondOfMonth()
+print(lastMillisecondOfMonth.description)        // 1466322025000
+```
 
 ## Duration
 A duration is a explicit length of time that can be measured in seconds (or part thereof). For example, 2 hours can be represented as 7200 seconds.
