@@ -36,7 +36,7 @@ public struct LocalDateTime {
 	- parameter error: An error that will be populated if the initialiser fails
 	*/
 	public init?(_ year: Int, _ month: Int, _ day: Int, _ hour: Int, _ minute: Int, _ second: Int, _ millisecond: Int = 0, _ error: DateTimeErrorPointer? = nil) {
-		if let date = LocalDate(year, month, day, error!), let time = LocalTime(hour, minute, second, millisecond, error!) {
+		if let date = LocalDate(year, month, day, error), let time = LocalTime(hour, minute, second, millisecond, error) {
 			self.init(date, time)
 		}
 		else {

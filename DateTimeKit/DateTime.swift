@@ -55,7 +55,7 @@ public struct DateTime {
      - parameter error: An error that will be populated if the initialiser fails
      */
     public init?(_ year: Int, _ month: Int, _ day: Int, _ hour: Int, _ minute: Int, _ second: Int, _ millisecond: Int = 0, _ zone: Zone, _ error: DateTimeErrorPointer? = nil) {
-        if let dateTime = LocalDateTime(year, month, day, hour, minute, second, millisecond, error!) {
+        if let dateTime = LocalDateTime(year, month, day, hour, minute, second, millisecond, error) {
             self.init(dateTime, zone)
         }
         else {
