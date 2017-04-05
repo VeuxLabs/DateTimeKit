@@ -26,7 +26,7 @@ public struct LocalTime {
 	- parameter millisecond: The hour (must be between 0 and 999 inclusive)
 	- parameter error: An error that will be populated if the initialiser fails
 	*/
-	public init?(_ hour: Int, _ minute: Int, _ second: Int = 0, _ millisecond: Int = 0, _ error: DateTimeErrorPointer = nil) {
+	public init?(_ hour: Int, _ minute: Int, _ second: Int = 0, _ millisecond: Int = 0, _ error: DateTimeErrorPointer? = nil) {
 		if hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59 && second >= 0 && second <= 59 && millisecond >= 0 && millisecond <= 999 {
 			self.hour = hour
 			self.minute = minute
@@ -50,12 +50,12 @@ public struct LocalTime {
 	- parameter locale: The locale that will be used when parsing
 	- parameter error: An error that will be populated if the initialiser fails
 	*/
-	public init?(input: String, format: String, zone: Zone = Zone.systemDefault(), locale: NSLocale = NSLocale.autoupdatingCurrentLocale(), _ error: DateTimeErrorPointer = nil) {
-		let dateFormatter = NSDateFormatter()
+	public init?(input: String, format: String, zone: Zone = Zone.systemDefault(), locale: Locale = Locale.autoupdatingCurrent, _ error: DateTimeErrorPointer? = nil) {
+		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = format
-		dateFormatter.timeZone = zone.timezone
+		dateFormatter.timeZone = zone.timezone as TimeZone!
 		dateFormatter.locale = locale
-		if let date = dateFormatter.dateFromString(input) {
+		if let date = dateFormatter.date(from: input) {
 			self.init(Instant(date), zone)
 		}
 		else {
@@ -107,7 +107,7 @@ public struct LocalTime {
 	- parameter duration: The duration to be added
 	- returns: A new `LocalTime` that represents the new time
 	*/
-	public func plus(duration: Duration) -> LocalTime {
+	public func plus(_ duration: Duration) -> LocalTime {
 		let zonedDateTime = DateTime(1970, 1, 1, self.hour, self.minute, self.second, self.millisecond, Zone.utc())!
 		let newDateTime = zonedDateTime + duration
 		return LocalTime(newDateTime.instant(), Zone.utc())
@@ -126,7 +126,7 @@ public struct LocalTime {
 	- parameter duration: The duration to be subtracted
 	- returns: A new `LocalTime` that represents the new time
 	*/
-	public func minus(duration: Duration) -> LocalTime {
+	public func minus(_ duration: Duration) -> LocalTime {
 		let zonedDateTime = DateTime(1970, 1, 1, self.hour, self.minute, self.second, self.millisecond, Zone.utc())!
 		let newDateTime = zonedDateTime - duration
 		return LocalTime(newDateTime.instant(), Zone.utc())

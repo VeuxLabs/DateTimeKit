@@ -75,7 +75,7 @@ public struct Duration {
 	- parameter duration: The duration to be added
 	- returns: A new duration that includes the passed duration
 	*/
-	public func plus(duration: Duration) -> Duration {
+	public func plus(_ duration: Duration) -> Duration {
 		return Duration(self.seconds + duration.seconds)
 	}
 	
@@ -89,7 +89,7 @@ public struct Duration {
 	- parameter duration: The duration to be subtracted
 	- returns: A new duration that includes the passed duration
 	*/
-	public func minus(duration: Duration) -> Duration {
+	public func minus(_ duration: Duration) -> Duration {
 		return Duration(self.seconds - duration.seconds)
 	}
 }

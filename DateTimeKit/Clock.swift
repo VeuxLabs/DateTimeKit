@@ -53,7 +53,7 @@ public struct SystemClock : Clock {
 		return self.internalZone
 	}
 	public func instant() -> Instant {
-		return Instant(NSDate())
+		return Instant(Date())
 	}
 }
 

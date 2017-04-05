@@ -23,6 +23,6 @@ is unlikely that the text of this reason is suitable for presenting to the user,
 it would be very useful for logging/debugging.
 */
 public enum DateTimeError {
-	case MalformedZoneIdentifier(String)
-	case UnableToParseDate(String)
+	case malformedZoneIdentifier(String)
+	case unableToParseDate(String)
 }

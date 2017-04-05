@@ -19,7 +19,7 @@ more details on the supported formats.
 */
 public struct Zone {
 	/** The underlying timezone for this zone */
-	let timezone: NSTimeZone
+	let timezone: TimeZone
 	/** Additional precision to support timezones that are accurate to the second. Can be negative. */
 	let secondsFudge: Int
 	
@@ -28,7 +28,7 @@ public struct Zone {
 
 	- parameter timezone: The timezone to use. Defaults to the system default timezone
 	*/
-	public init(_ timezone: NSTimeZone = NSTimeZone.defaultTimeZone()) {
+	public init(_ timezone: TimeZone = TimeZone.current) {
 		// because we're using a passed timezone, we can set the secondsFudge to zero
 		self.init(timezone, 0)
 	}
@@ -50,7 +50,7 @@ public struct Zone {
 	- parameter error: An error that will be populated if the initialiser fails
 	- returns: A `Zone` object if a timezone is able to be determined using the passed identifier, nil otherwise.
 	*/
-	public init?(_ zoneIdentifier: String, _ error: DateTimeErrorPointer = nil) {
+	public init?(_ zoneIdentifier: String, _ error: DateTimeErrorPointer? = nil) {
 		if let (timezone, secondsFudge) = Zone.convertIdentifierTimeZone(zoneIdentifier, error) {
 			self.init(timezone, secondsFudge)
 		}
@@ -59,7 +59,7 @@ public struct Zone {
 		}
 	}
 	
-	private init(_ timezone: NSTimeZone, _ secondsFudge: Int) {
+	fileprivate init(_ timezone: TimeZone, _ secondsFudge: Int) {
 		self.timezone = timezone
 		self.secondsFudge = secondsFudge
 	}
@@ -67,15 +67,15 @@ public struct Zone {
 	// MARK: Convenience constructors
 	/** Returns a `Zone` representing the system's current timezone */
 	public static func systemDefault() -> Zone {
-		return Zone(NSTimeZone.systemTimeZone())
+		return Zone(TimeZone.current)
 	}
 	/** Returns a `Zone` representing GMT timezone */
 	public static func gmt() -> Zone {
-		return Zone(NSTimeZone(abbreviation: "GMT")!)
+		return Zone(TimeZone(abbreviation: "GMT")!)
 	}
 	/** Returns a `Zone` representing UTC timezone */
 	public static func utc() -> Zone {
-		return Zone(NSTimeZone(abbreviation: "UTC")!)
+		return Zone(TimeZone(abbreviation: "UTC")!)
 	}
 	
 	/**
@@ -85,11 +85,11 @@ public struct Zone {
 	- parameter error: An error pointer that will be populated in case parsing fails
 	- returns: An optional tuple where the first element is a NSTimeZone and the second element is the additional precision. Returns nil if unable to parse.
 	*/
-	private static func convertIdentifierTimeZone(zoneIdentifier: String, _ error: DateTimeErrorPointer) -> (NSTimeZone, Int)? {
+	fileprivate static func convertIdentifierTimeZone(_ zoneIdentifier: String, _ error: DateTimeErrorPointer?) -> (TimeZone, Int)? {
 		// must be at least one character long
 		if zoneIdentifier.characters.count == 0 {
 			if error != nil {
-				error.memory = DateTimeError.MalformedZoneIdentifier("Invalid input: \"\". Zone identifier cannot be blank")
+				error?.pointee = DateTimeError.malformedZoneIdentifier("Invalid input: \"\". Zone identifier cannot be blank")
 			}
 			return nil
 		}
@@ -97,13 +97,13 @@ public struct Zone {
 		// if it is a "Z" then that is UTC
 		let firstChar = zoneIdentifier[zoneIdentifier.startIndex]
 		if firstChar == "Z" {
-			return (NSTimeZone(abbreviation: "UTC")!, 0)
+			return (TimeZone(abbreviation: "UTC")!, 0)
 		}
 		
-		if let tz = NSTimeZone(name: zoneIdentifier) {
+		if let tz = TimeZone(identifier: zoneIdentifier) {
 			return (tz, 0)
 		}
-		else if let tz = NSTimeZone(abbreviation: zoneIdentifier) {
+		else if let tz = TimeZone(abbreviation: zoneIdentifier) {
 			return (tz, 0)
 		}
 		else if firstChar == "+" || firstChar == "-" {
@@ -113,7 +113,7 @@ public struct Zone {
 			let componentCount = components.count
 			if componentCount != 2 && componentCount != 3 {
 				if error != nil {
-					error.memory = DateTimeError.MalformedZoneIdentifier("Invalid input: \"\(zoneIdentifier)\". Zone identifier format must be one of +yy:mm, -yy:mm, +yy:mm:ss, or -yy:mm:ss")
+					error?.pointee = DateTimeError.malformedZoneIdentifier("Invalid input: \"\(zoneIdentifier)\". Zone identifier format must be one of +yy:mm, -yy:mm, +yy:mm:ss, or -yy:mm:ss")
 				}
 				return nil
 			}
@@ -124,22 +124,22 @@ public struct Zone {
 				components.append("0")
 			}
 			
-			if let hh = Int(components[0]), mm = Int(components[1]), ss = Int(components[2]) {
+			if let hh = Int(components[0]), let mm = Int(components[1]), let ss = Int(components[2]) {
 				if hh < -18 || hh > 18 {
 					if error != nil {
-						error.memory = DateTimeError.MalformedZoneIdentifier("Invalid input: \"\(hh)\". Zone identifier hours must be between -18 and +18 (inclusive)")
+						error?.pointee = DateTimeError.malformedZoneIdentifier("Invalid input: \"\(hh)\". Zone identifier hours must be between -18 and +18 (inclusive)")
 					}
 					return nil
 				}
 				if mm < 0 || mm > 59 {
 					if error != nil {
-						error.memory = DateTimeError.MalformedZoneIdentifier("Invalid input: \"\(mm)\". Zone identifier minutes must be between 0 and 59 (inclusive)")
+						error?.pointee = DateTimeError.malformedZoneIdentifier("Invalid input: \"\(mm)\". Zone identifier minutes must be between 0 and 59 (inclusive)")
 					}
 					return nil
 				}
 				if ss < 0 || ss > 59 {
 					if error != nil {
-						error.memory = DateTimeError.MalformedZoneIdentifier("Invalid input: \"\(ss)\". Zone identifier seconds must be between 0 and 59 (inclusive)")
+						error?.pointee = DateTimeError.malformedZoneIdentifier("Invalid input: \"\(ss)\". Zone identifier seconds must be between 0 and 59 (inclusive)")
 					}
 					return nil
 				}
@@ -157,14 +157,14 @@ public struct Zone {
 				//
 				// Anyway, to workaround this oddity, we keep track of the difference between what we
 				// pass NSTimeZone and what it reports as being saved and squirrel it away for later use
-				let tz = NSTimeZone(forSecondsFromGMT: seconds)
-				let fudge = seconds - tz.secondsFromGMT
-				return (tz, fudge)
+				let tz = TimeZone(secondsFromGMT: seconds)
+				let fudge = seconds - (tz?.secondsFromGMT())!
+				return (tz!, fudge)
 			}
 		}
 
 		if error != nil {
-			error.memory = DateTimeError.MalformedZoneIdentifier("Invalid input: \"\(zoneIdentifier)\". Zone identifier is not in expected format")
+			error?.pointee = DateTimeError.malformedZoneIdentifier("Invalid input: \"\(zoneIdentifier)\". Zone identifier is not in expected format")
 		}
 		return nil
 	}
@@ -178,9 +178,9 @@ public struct Zone {
 	- parameter locale: The locale with which to output the name of the zone. Defaults to user's current locale.
 	- returns: A description of the zone
 	*/
-	public func displayName(locale: NSLocale = NSLocale.autoupdatingCurrentLocale()) -> String {
+	public func displayName(_ locale: Locale = Locale.autoupdatingCurrent) -> String {
 		if self.secondsFudge == 0 {
-			return self.timezone.localizedName(.Standard, locale: locale) ?? "Unknown"
+			return self.timezone.localizedName(for: .standard, locale: locale) ?? "Unknown"
 		}
 		else {
 			return self.zoneIdentifier()
@@ -202,7 +202,7 @@ public struct Zone {
 	- returns: An identifier for this zone
 	*/
 	public func zoneIdentifier() -> String {
-		let secondsFromGMT = self.timezone.secondsFromGMT + self.secondsFudge
+		let secondsFromGMT = self.timezone.secondsFromGMT() + self.secondsFudge
 		if secondsFromGMT == 0 {
 			return "Z"
 		}
@@ -225,7 +225,7 @@ public struct Zone {
 // MARK: - Printable protocol
 extension Zone : CustomStringConvertible {
 	public var description: String {
-		return self.timezone.description
+		return (self.timezone as NSTimeZone).description
 	}
 }
 
