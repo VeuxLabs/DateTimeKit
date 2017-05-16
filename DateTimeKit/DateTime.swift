@@ -31,7 +31,8 @@ public struct DateTime {
     public let dateTime: LocalDateTime
     /** The timezone that the dateTime field is representing */
     public let zone: Zone
-    
+    private let secondsInADay = 86400
+
     public var year:        Int { get { return dateTime.date.year } }
     public var month:       Int { get { return dateTime.date.month } }
     public var day:         Int { get { return dateTime.date.day } }
@@ -232,7 +233,7 @@ public struct DateTime {
         }
         var newDateTime = DateTime(self.year , self.month, self.day, 23, 59, 59, 59, self.zone)!
         while newDateTime.getDayOfTheWeek() != .saturday {
-            newDateTime = newDateTime.plus(Period(0,0,1))
+            newDateTime = newDateTime.plus(Duration(secondsInADay))
         }
         return newDateTime;
     }
