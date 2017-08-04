@@ -9,6 +9,15 @@ An instant represents a moment on the datetime continuum. Under the covers, just
 ```
 let now = Instant()
 println(now.description)   // 2015-03-18 05:13:43 +0000
+
+```
+
+If you want to convert a Date object to Instant you should call this method:
+```
+let now = Date()
+let instant = Instant,init(now)
+println(now.description)   // 2015-03-18 05:13:43 +0000
+
 ```
 
 ## Zone
@@ -18,6 +27,7 @@ A zone is a representation of a specific timezone. It can be constructed using a
 let sydneyZone = Zone("Australia/Sydney")!
 let utcZone    = Zone.utc()
 let randomZone = Zone("-12:46")!
+
 ```
 
 ## DateTime
@@ -39,6 +49,9 @@ println(parisTime)        // 2015-03-06 09:02:28.662 - Europe/Paris (GMT+1) offs
 
 ## Weeks Methods
 Is import to get the first and last day of a specific `DateTime` for that this library has the following methods:
+
+These methods get the initial  and end day of the week using Sunday always as the first day of the week
+
 ```
 let zone = Zone()
 let customDate = DateTime(2016 , 05, 15, 02, 20, 0, 0, zone)!
@@ -50,6 +63,24 @@ let lastDateOfTheWeekForAnSpecificDate = customDate.getLastDayOfTheWeek()
 print(lastDateOfTheWeekForAnSpecificDate.description)        // 2016-05-21 23:59:59.59 - America/Costa_Rica (CST) offset -21600
 
 ```
+
+These methods get the initial and end day of the week using the current calendar, for example if the device has configured the region in CR the first day should be Monday and the last day should be Sunday, if the device has configured the region in the United States the first should be Sunday and the last day Saturday
+
+```
+//Region: Costa Rica
+let zone = Zone()
+let customDate = DateTime(2016 , 05, 18, 02, 20, 0, 0, zone)!
+
+let firstDateOfTheWeekForAnSpecificDate = getFirstDayOfTheWeekUsingTheCurrentCalendar()
+print(firstDateOfTheWeekForAnSpecificDate.description)       // 2016-05-16 00:00:00 - America/Costa_Rica (CST) offset -21600
+
+let lastDateOfTheWeekForAnSpecificDate = customDate.getLastDayOfTheWeekUsingTheCurrentCalendar()
+print(lastDateOfTheWeekForAnSpecificDate.description)        // 2016-05-22 23:59:59.59 - America/Costa_Rica (CST) offset -21600
+
+```
+
+In the others cases when the initial day is different of Monday or Sunday the initial day must be configured Sunday.
+
 
 ## Days Methods
 Is import to know what is the day number of the specific date for that this library has the following method

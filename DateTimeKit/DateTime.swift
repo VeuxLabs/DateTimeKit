@@ -226,7 +226,7 @@ public struct DateTime {
     
     
     /**
-     Returns a DateTime with the first date of the week using the current calendar, for example if the calendar is in CR the first should be Monday but the calendar is in the USA the first day should be Sunday
+     Returns a DateTime with the first date of the week using the current calendar, for example if the calendar is in CR the first day should be Monday but if the calendar is in the USA the first day should be Sunday
      */
     
     public func getFirstDayOfTheWeekUsingTheCurrentCalendar() -> DateTime {
@@ -234,9 +234,9 @@ public struct DateTime {
         let instantOfTheFirstDayOfTheWeek = Instant.init(firstDayOfTheWeek!)
         let dateTimeOfTheFirstDayOfTheWeek = DateTime(instantOfTheFirstDayOfTheWeek, self.zone)
         if dateTimeOfTheFirstDayOfTheWeek.getDayOfTheWeekUsinTheCurrentCalendar() == .sunday || dateTimeOfTheFirstDayOfTheWeek.getDayOfTheWeekUsinTheCurrentCalendar() == .monday{
-             return DateTime(self.year , self.month, self.day, 0, 0, 0, 0, self.zone)!
+            return DateTime(dateTimeOfTheFirstDayOfTheWeek.year , dateTimeOfTheFirstDayOfTheWeek.month, dateTimeOfTheFirstDayOfTheWeek.day, 0, 0, 0, 0, self.zone)!
         }
-        var newDateTime = DateTime(self.year , self.month, self.day, 0, 0, 0, 0, self.zone)!
+        var newDateTime = DateTime(dateTimeOfTheFirstDayOfTheWeek.year , dateTimeOfTheFirstDayOfTheWeek.month, dateTimeOfTheFirstDayOfTheWeek.day, 0, 0, 0, 0, self.zone)!
         while newDateTime.getDayOfTheWeekUsinTheCurrentCalendar() != .sunday {
             newDateTime =  newDateTime.plus(Period(0,0,1))
         }
@@ -251,7 +251,7 @@ public struct DateTime {
     }
     
     /**
-     Returns a DateTime with the first date of the week in Miliseconds using the current calendar, for example if the calendar is in CR the first should be Monday but the calendar is in the USA the first day should be Sunday
+     Returns a DateTime with the first date of the week in Miliseconds using the current calendar, for example if the calendar is in CR the first day should be Monday but if the calendar is in the USA the first day should be Sunday
      */
     
     public func getFirstDayOfTheWeekUsingTheCurrentCalendarInMiliseconds() -> NSNumber{
@@ -274,10 +274,32 @@ public struct DateTime {
     }
     
     /**
+     Returns a DateTime with the last date of the week using the current calendar, for example if the calendar is in CR the last day should be Sunday but if the calendar is in the USA the last day should be Saturday
+     */
+    public func getLastDayOfTheWeekUsingTheCurrentCalendar() -> DateTime{
+        let firstDayOfTheWeek = getFirstDayOfTheWeekUsingTheCurrentCalendar()
+        var newDateTime = DateTime(firstDayOfTheWeek.year , firstDayOfTheWeek.month, firstDayOfTheWeek.day, 23, 59, 59, 59, self.zone)!
+        var counter = 1
+        while counter < 7 {
+             newDateTime = newDateTime.plus(Period(0,0,1))
+            counter = counter + 1
+        }
+        return newDateTime;
+    }
+    
+    /**
      Returns a DateTime with the last date of the week in Miliseconds
      */
     public func getLastDayOfTheWeekInMiliseconds() -> NSNumber{
         return  NSNumber(value: Int64(getLastDayOfTheWeek().instant().millisecondsSinceReferenceDate) as Int64)
+    }
+    
+    
+    /**
+     Returns a DateTime with the last date of the week using the current calendar, for example if the calendar is in CR the last day should be Sunday but if the calendar is in the USA the last day should be Saturday
+     */
+    public func getLastDayOfTheWeekUsingTheCurrentCalendarInMiliseconds() -> NSNumber{
+        return  NSNumber(value: Int64(getLastDayOfTheWeekUsingTheCurrentCalendar().instant().millisecondsSinceReferenceDate) as Int64)
     }
     
     /**
