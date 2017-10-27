@@ -219,7 +219,7 @@ public struct DateTime {
         }
         var newDateTime = DateTime(self.year , self.month, self.day, 0, 0, 0, 0, self.zone)!
         while newDateTime.getDayOfTheWeek() != .sunday {
-            newDateTime = newDateTime.minus(Period(0,0,1))
+            newDateTime = newDateTime.minus(Duration(86400))
         }
         return newDateTime;
     }
@@ -238,7 +238,7 @@ public struct DateTime {
         }
         var newDateTime = DateTime(dateTimeOfTheFirstDayOfTheWeek.year , dateTimeOfTheFirstDayOfTheWeek.month, dateTimeOfTheFirstDayOfTheWeek.day, 0, 0, 0, 0, self.zone)!
         while newDateTime.getDayOfTheWeekUsinTheCurrentCalendar() != .sunday {
-            newDateTime =  newDateTime.plus(Period(0,0,1))
+            newDateTime =  newDateTime.plus(Duration(86400))
         }
         return newDateTime;
     }
@@ -281,7 +281,7 @@ public struct DateTime {
         var newDateTime = DateTime(firstDayOfTheWeek.year , firstDayOfTheWeek.month, firstDayOfTheWeek.day, 23, 59, 59, 59, self.zone)!
         var counter = 1
         while counter < 7 {
-             newDateTime = newDateTime.plus(Period(0,0,1))
+             newDateTime = newDateTime.plus(Duration(86400))
             counter = counter + 1
         }
         return newDateTime;
