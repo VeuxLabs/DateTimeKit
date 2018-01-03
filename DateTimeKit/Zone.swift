@@ -87,7 +87,7 @@ public struct Zone {
 	*/
 	fileprivate static func convertIdentifierTimeZone(_ zoneIdentifier: String, _ error: DateTimeErrorPointer?) -> (TimeZone, Int)? {
 		// must be at least one character long
-		if zoneIdentifier.characters.count == 0 {
+		if zoneIdentifier.count == 0 {
 			if error != nil {
 				error?.pointee = DateTimeError.malformedZoneIdentifier("Invalid input: \"\". Zone identifier cannot be blank")
 			}

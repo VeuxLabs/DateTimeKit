@@ -219,9 +219,9 @@ public struct DateTime {
         }
         var newDateTime = DateTime(self.year , self.month, self.day, 0, 0, 0, 0, self.zone)!
         while newDateTime.getDayOfTheWeek() != .sunday {
-            newDateTime = newDateTime.minus(Duration(86400))
+            newDateTime =  newDateTime.minus(numberOfDays: 1)
         }
-        return newDateTime;
+        return DateTime(newDateTime.year , newDateTime.month, newDateTime.day, 0, 0, 0, 0, self.zone)!
     }
     
     
@@ -238,9 +238,9 @@ public struct DateTime {
         }
         var newDateTime = DateTime(dateTimeOfTheFirstDayOfTheWeek.year , dateTimeOfTheFirstDayOfTheWeek.month, dateTimeOfTheFirstDayOfTheWeek.day, 0, 0, 0, 0, self.zone)!
         while newDateTime.getDayOfTheWeekUsinTheCurrentCalendar() != .sunday {
-            newDateTime =  newDateTime.plus(Duration(86400))
+            newDateTime =  newDateTime.plus(numberOfDays: 1)
         }
-        return newDateTime;
+        return DateTime(newDateTime.year , newDateTime.month, newDateTime.day, 0, 0, 0, 0, self.zone)!
     }
     
     /**
@@ -268,9 +268,9 @@ public struct DateTime {
         }
         var newDateTime = DateTime(self.year , self.month, self.day, 23, 59, 59, 59, self.zone)!
         while newDateTime.getDayOfTheWeek() != .saturday {
-            newDateTime = newDateTime.plus(Duration(secondsInADay))
+            newDateTime = newDateTime.plus(numberOfDays: 1)
         }
-        return newDateTime;
+        return DateTime(newDateTime.year , newDateTime.month, newDateTime.day, 23, 59, 59, 59, self.zone)!
     }
     
     /**
@@ -281,10 +281,10 @@ public struct DateTime {
         var newDateTime = DateTime(firstDayOfTheWeek.year , firstDayOfTheWeek.month, firstDayOfTheWeek.day, 23, 59, 59, 59, self.zone)!
         var counter = 1
         while counter < 7 {
-             newDateTime = newDateTime.plus(Duration(86400))
+             newDateTime = newDateTime.plus(numberOfDays: 1)
             counter = counter + 1
         }
-        return newDateTime;
+        return DateTime(newDateTime.year , newDateTime.month, newDateTime.day, 23, 59, 59, 59, self.zone)!
     }
     
     /**
@@ -354,6 +354,21 @@ public struct DateTime {
     }
     
     /**
+     Adds a quantity number of days to this dateTime and returns a new object representing the new dateTime.
+     
+     Also available by the `+` operator.
+     
+     - parameter period: The period to be added
+     - returns: A new `DateTime` that represents the new dateTime
+     */
+    public func plus(numberOfDays: Int) -> DateTime {
+        let originalDate = makeDate(year: self.year, month: self.month, day: self.day, hr: self.hour, min: self.minute, sec: self.second)
+        let newDateInAppleFormat = Calendar.current.date(byAdding: .day, value: numberOfDays, to: originalDate)!
+        let instant = Instant.init(newDateInAppleFormat)
+        return DateTime(instant,Zone.utc())
+    }
+    
+    /**
      Subtracts a period from this dateTime and returns a new object representing the new dateTime.
      
      Also available by the `-` operator.
@@ -364,6 +379,22 @@ public struct DateTime {
     public func minus(_ period: Period) -> DateTime {
         return DateTime(LocalDateTime(self.dateTime.date - period, self.dateTime.time), self.zone)
     }
+    
+    /**
+     Subtracts a quantity of days from this dateTime and returns a new object representing the new dateTime.
+     
+     Also available by the `-` operator.
+     
+     - parameter period: The period to be subtracted
+     - returns: A new `DateTime` that represents the new dateTime
+     */
+    public func minus(numberOfDays: Int) -> DateTime {
+        let originalDate = makeDate(year: self.year, month: self.month, day: self.day, hr: self.hour, min: self.minute, sec: self.second)
+        let newDateInAppleFormat = Calendar.current.date(byAdding: .day, value: numberOfDays * -1, to: originalDate)!
+        let instant = Instant.init(newDateInAppleFormat)
+        return DateTime(instant,Zone.utc())
+    }
+
     
     // MARK: - Extensions added re: joda-time API (intermediate changes, more to come)
     
@@ -429,6 +460,13 @@ public struct DateTime {
         } else {
             return self
         }
+    }
+    
+    private func makeDate(year: Int, month: Int, day: Int, hr: Int, min: Int, sec: Int) -> Date {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        let components = DateComponents(year: year, month: month, day: day, hour: hr, minute: min, second: sec)
+        return calendar.date(from: components)!
     }
 }
 
