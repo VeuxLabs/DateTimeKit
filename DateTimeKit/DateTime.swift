@@ -363,7 +363,7 @@ public struct DateTime {
      */
     public func plus(numberOfDays: Int) -> DateTime {
         let originalDate = makeDate(year: self.year, month: self.month, day: self.day, hr: self.hour, min: self.minute, sec: self.second)
-        let newDateInAppleFormat = Calendar.current.date(byAdding: .day, value: numberOfDays, to: originalDate)!
+        let newDateInAppleFormat = Calendar.current.date(byAdding: .hour, value: numberOfDays * 24, to: originalDate)!
         let instant = Instant.init(newDateInAppleFormat)
         return DateTime(instant,Zone.utc())
     }
@@ -390,7 +390,7 @@ public struct DateTime {
      */
     public func minus(numberOfDays: Int) -> DateTime {
         let originalDate = makeDate(year: self.year, month: self.month, day: self.day, hr: self.hour, min: self.minute, sec: self.second)
-        let newDateInAppleFormat = Calendar.current.date(byAdding: .day, value: numberOfDays * -1, to: originalDate)!
+        let newDateInAppleFormat = Calendar.current.date(byAdding: .hour, value: numberOfDays * 24 * -1, to: originalDate)!
         let instant = Instant.init(newDateInAppleFormat)
         return DateTime(instant,Zone.utc())
     }
