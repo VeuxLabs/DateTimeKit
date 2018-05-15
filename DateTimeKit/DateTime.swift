@@ -185,7 +185,7 @@ public struct DateTime {
     public func getLastMillisecondOfMonth() -> DateTime {
         var newDateTime = DateTime(self.year , self.month + 1, 1, 0, 0, 0, 0, self.zone)
         if self.month == 12 {
-            newDateTime = DateTime(self.year + 1 , self.month, 1, 0, 0, 0, 0, self.zone)
+            newDateTime = DateTime(self.year + 1 , 1, 1, 0, 0, 0, 0, self.zone)
         }
         newDateTime = newDateTime!.minus(Duration(1))
         return newDateTime!
